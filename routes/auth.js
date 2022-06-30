@@ -8,6 +8,8 @@ const User = require('../models/User');
 
 const bcrypt = require('bcryptjs')
 
+const validateRegisterInput = require('../validation/registerValidation')
+
 
 
 //Route - GET /api/auth/test
@@ -23,6 +25,23 @@ router.get("/test", (req, res) => {
 router.post("/register", async(req, res) => {
     //try code in here
     try{
+        // destructuring to grab the errors
+        const {errors, isValid} = validateRegisterInput(req.body);
+
+        if(!isValid) {
+            return res.status(400).json(errors);
+        }
+
+
+        //check for existing user by finding (findingOne()) an existing email in the database including same email with different capital letters
+        const existingEmail = await User.findOne({
+            
+            email: new RegExp("^" + req.body.email + "$", "i")
+        });
+        if(existingEmail) {
+            return res.status(400).json({error: "There is already a user with this email"});
+        }
+
         //hash the password
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
 

@@ -17,7 +17,7 @@ const authRoute = require("./routes/auth")
 // Express middleware service - recognizes the incoming Request Object as a JSON Object.
 app.use(express.json());
 // Express middleware service - recognizes the incoming Request Object as Strings or Arrays.
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 // First API ROUTE (default route) - Everytime we make a GET request to "/api" we then want to return something
 app.get("/api", (req,res) => {
