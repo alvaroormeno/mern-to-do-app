@@ -5,6 +5,12 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+// import mongoose
+const mongoose = require("mongoose");
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Express middleware service - recognizes the incoming Request Object as a JSON Object.
 app.use(express.json());
 // Express middleware service - recognizes the incoming Request Object as Strings or Arrays.
@@ -27,7 +33,22 @@ app.post("/name", (req, res) => {
     }
 })
 
-// SERVER RUNNING - process.env.PORT acceses PORT in .env file
-app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}`)
-})
+
+// connect to database - first will connect to database and then it will listen and start express server
+mongoose.connect(process.env.MONGO_URI).then(() => {
+    console.log('Connected to database')
+
+    // SERVER RUNNING - process.env.PORT acceses PORT in .env file
+    app.listen(process.env.PORT, () => {
+        console.log(`Server running on port ${process.env.PORT}`)
+    });
+
+// if there is an error, we will console log it
+}).catch((error) => {
+    console.log(error);
+});
+
+
+
+
+
