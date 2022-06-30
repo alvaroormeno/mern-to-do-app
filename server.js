@@ -8,6 +8,9 @@ const app = express();
 // import mongoose
 const mongoose = require("mongoose");
 
+// import auth tst route
+const authRoute = require("./routes/auth")
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,22 +19,20 @@ app.use(express.json());
 // Express middleware service - recognizes the incoming Request Object as Strings or Arrays.
 app.use(express.urlencoded());
 
-// First API ROUTE - Everytime we make a GET request to "/" we then want to return something
-app.get("/", (req,res) => {
+// First API ROUTE (default route) - Everytime we make a GET request to "/api" we then want to return something
+app.get("/api", (req,res) => {
     res.send("Fullstack React Course Express Server");
 })
 
 
-// Second API ROUTE - post route to verify we can get through data we are sending.  
-app.post("/name", (req, res) => {
-    // if req.body.name (body of the request with key: name) is true, return request in json format,
-    // else return request as status 400 with json format message.
-    if(req.body.name) {
-        return res.json({name: req.body.name})
-    } else {
-        return res.status(400).json({error: "No name provided"})
-    }
-})
+
+
+
+// app.use tells express server to use
+app.use("/api/auth", authRoute);
+
+
+
 
 
 // connect to database - first will connect to database and then it will listen and start express server
@@ -52,3 +53,20 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// DELETED CODE FOR FUTURE REFERENCE
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Second API ROUTE - post route to verify we can get through data we are sending. 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// app.post("/name", (req, res) => {
+//     // if req.body.name (body of the request with key: name) is true, return request in json format,
+//     // else return request as status 400 with json format message.
+//     if(req.body.name) {
+//         return res.json({name: req.body.name})
+//     } else {
+//         return res.status(400).json({error: "No name provided"})
+//     }
+// })
