@@ -10,6 +10,8 @@ const bycrypt = require('bcryptjs')
 
 const validateRegisterInput = require('../validation/registerValidation')
 
+const jwt = require('jsonwebtoken')
+
 
 
 //Route - GET /api/auth/test
@@ -79,7 +81,8 @@ router.post("/register", async(req, res) => {
 //Access - Public
 router.post("/login", async (req, res) => {
     try{
-        //STEP 1 - Check for the user email if is already saved on database
+        //STEP 1 - Check for the user email if is already saved on database. .findOne() will return the complete array
+        // of the user that matches the criteria specified, being email here. 
         const user = await User.findOne({
             email: new RegExp("^" + req.body.email + "$", "i")
         })
@@ -93,9 +96,28 @@ router.post("/login", async (req, res) => {
         if(!passwordMatch) {
             return res.status(400).json({error: "There was a problem with your login credentials"})
         }
+        //STEP3 - Create a token
+        const payload = {userId: user._id};
+        // encode the payload using JWT
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"});
+        // use token to set cookie - .cookie(name, value, options)
+        res.cookie("acces-token", token, {
+            // expires in 7 days
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            // can only be accesed by http server, no one can open it on a browsers console
+            httpOnly: true,
+            // if we are in production secure: value is true if we are not in productions its equal to false, so for local debugging we wont use secure token
+            secure: process.env.NODE_ENV === "production"
+        });
 
-        return res.json({passwordMatch: passwordMatch})
-        
+        const userToReturn = {...user._doc};
+        delete userToReturn.password;
+
+        return res.json({
+            token: token,
+            user: userToReturn,
+        })
+
     } catch(err) {
         console.log(err)
 

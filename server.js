@@ -11,6 +11,8 @@ const mongoose = require("mongoose");
 // import auth tst route
 const authRoute = require("./routes/auth")
 
+const cookieParser = require("cookie-parser");
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +20,8 @@ const authRoute = require("./routes/auth")
 app.use(express.json());
 // Express middleware service - recognizes the incoming Request Object as Strings or Arrays.
 app.use(express.urlencoded({ extended: true }));
+// Middleware to read and set cookies in request
+app.use(cookieParser());
 
 // First API ROUTE (default route) - Everytime we make a GET request to "/api" we then want to return something
 app.get("/api", (req,res) => {
