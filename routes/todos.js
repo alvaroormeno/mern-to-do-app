@@ -234,5 +234,38 @@ router.put("/:toDoId", requiresAuth, async (req, res) => {
     }
 })
 
+//Route - DELETE /api/todos/:toDoId
+//Description - Delete a specific todo
+//Access - Private
+router.delete("/:toDoId", requiresAuth, async (req, res) => {
+    try{
+
+        // STEP 1 - FIND THE TODO TO CHECK IF IT EXISTS
+        // a. Variable toDo = the return value of findOne() which finds a specific todo with the toDoId passed in the URL
+        const toDo = await ToDo.findOne({
+            user: req.user._id,
+            _id: req.params.toDoId,
+        });
+        // b. If no todo was found / toDo variable = false, then return an error of 400
+        if(!toDo) {
+            return res.status(404).json({error: "Could not find a todo"})
+        }
+
+        // STEP 2 - DELETE TODO
+        // a. If we find to do, delete it straight away, no need to add to a variable becayse nothing should be returned
+        await ToDo.findOneAndRemove({
+            user: req.user._id,
+            _id: req.params.toDoId,
+        });
+        // b. We dont want to return a todo we just deleted so we want to return a json message after deleting stating success: true
+        return res.json({success: true})
+
+    } catch(err) {
+        console.log(err);
+        return res.status(500).send(err.message);
+    }
+})
+
+
 
 module.exports = router;
