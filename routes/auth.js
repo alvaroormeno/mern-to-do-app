@@ -57,6 +57,24 @@ router.post("/register", async(req, res) => {
 
         //save the user to the database
         const savedUser = await newUser.save();
+
+
+        // ADDED SO THAT WHEN USER REGISTERS, IT AUTOMATICALLY SIGNS HIM IN BY CREATING A TOKEN FOR THAT USER
+        // Create a token
+        const payload = {userId: savedUser._id};
+        // encode the payload using JWT
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"});
+        // use token to set cookie - .cookie(name, value, options)
+        res.cookie("access-token", token, {
+            // expires in 7 days
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            // can only be accesed by http server, no one can open it on a browsers console
+            httpOnly: true,
+            // if we are in production secure: value is true if we are not in productions its equal to false, so for local debugging we wont use secure token
+            secure: process.env.NODE_ENV === "production"
+        });
+
+
         // After saving it, we need to create a new variable (userToReturn) which wont return the Password for more security...
         // ...savedUser spreads all the data from the const savedUser into new object, ._doc is needed
         // to show object as regular json object without mongoose/mongodb extra  meta fields for internal management
@@ -76,7 +94,7 @@ router.post("/register", async(req, res) => {
 })
 
 
-//Route - POST /api/auth/loggin
+//Route - POST /api/auth/login
 //Description - Login user and return access token
 //Access - Public
 router.post("/login", async (req, res) => {
