@@ -12,6 +12,8 @@ router.get("/test", (req, res) => {
     res.send("ToDos route working!")
 })
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Route - POST /api/todos/test
 //Description - Create a new todo
@@ -45,7 +47,8 @@ router.post("/new", requiresAuth, async (req, res) => {
     }
 })
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Route - GET /api/todos/current
 //Description - return current todos
@@ -74,8 +77,10 @@ router.get("/current", requiresAuth, async (req, res) => {
     }
 })
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Route - PUT /api/todos/test/:toDoId/complete
+//Route - PUT /api/todos/:toDoId/complete
 //Description - Mark a todo as complete
 //Access - Private
 router.put("/:toDoId/complete", requiresAuth, async(req, res) => {
@@ -118,8 +123,10 @@ router.put("/:toDoId/complete", requiresAuth, async(req, res) => {
     }
 })
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Route - PUT /api/todos/test/:toDoId/incomplete
+//Route - PUT /api/todos/:toDoId/incomplete
 //Description - Mark a todo as INCOMPLETE
 //Access - Private
 router.put("/:toDoId/incomplete" , requiresAuth, async (req, res) => {
@@ -166,6 +173,64 @@ router.put("/:toDoId/incomplete" , requiresAuth, async (req, res) => {
     } catch(err) {
         console.log(err);
         return res.status(500).send(err.message);
+    }
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//Route - PUT /api/todos/:toDoId
+//Description - Update the content of a ToDo
+//Access - Private
+router.put("/:toDoId", requiresAuth, async (req, res) => {
+    try{
+
+        // STEP 1 - FIND THE TODO TO CHECK IF IT EXISTS
+        // a. Variable toDo = the return value of findOne() which finds a specific todo with the toDoId passed in the URL
+        const toDo = await ToDo.findOne({
+            user: req.user._id,
+            _id: req.params.toDoId,
+        });
+        // b. If no todo was found / toDo variable = false, then return an error of 400
+        if(!toDo) {
+            return res.status(400).json({error: "Could not find a todo"})
+        }
+
+        // STEP 2 - VALIDATE CONTENT OF THE TODO
+        // a. Destructure the validateToDoInput() function be able to use isValid and errors separetly. Then we call validateToDoInput()
+        // and pass the query body (req.body) and let it run, it will return values for isValid and errors.
+        const{isValid, errors} = validateToDoInput(req.body)
+        // b. if is valid equals to false (!isValid), then return a status of 400 with the errors from validateToDoInput as json. 
+        if(!isValid) {
+            return res.status(400).json(errors);
+        }
+
+        //STEP 3 - FIND AND UPDATE THE TO DO
+        // Note - findOneAndUpdate() accepts 3 params. findOneAndUpdate(A, B, C)
+        // A = query to find, B = what to update, C = option to return new updated data or old before updated data, default is always old before update
+        const updatedToDo = await ToDo.findOneAndUpdate(
+             // (A) Find a specific todo based on the id which is passed on the URL
+            {
+                user: req.user._id,
+             _id: req.params.toDoId,
+            },
+            // (B) Update the content property value to the new value from the query body (req.body.content)
+            {
+                content: req.body.content
+            },
+            // (C) Option to retun the updated data of ToDo
+            {
+                new: true
+            }
+        );
+
+        return res.json(updatedToDo);
+
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send(err.message)
     }
 })
 
