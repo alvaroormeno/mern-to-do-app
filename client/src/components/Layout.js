@@ -10,7 +10,7 @@ const Layout = () => {
 
         <Routes>
             <Route exact path='/' element={<AuthBox/>}></Route>
-            <Route path='/test' element={<h1>TEST</h1>}></Route>
+            <Route path='/register' element={<AuthBox register />}></Route>
 
         </Routes>
 
