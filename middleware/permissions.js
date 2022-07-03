@@ -43,4 +43,4 @@ const requiresAuth = async (req, res, next) => {
     }
 }
 
-mocukde.exports = requiresAuth
+module.exports = requiresAuth

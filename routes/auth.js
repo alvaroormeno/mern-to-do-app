@@ -12,7 +12,7 @@ const validateRegisterInput = require('../validation/registerValidation')
 
 const jwt = require('jsonwebtoken')
 
-
+const requiresAuth = require("../middleware/permissions")
 
 //Route - GET /api/auth/test
 //Description - Test the auth route
@@ -101,7 +101,7 @@ router.post("/login", async (req, res) => {
         // encode the payload using JWT
         const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "7d"});
         // use token to set cookie - .cookie(name, value, options)
-        res.cookie("acces-token", token, {
+        res.cookie("access-token", token, {
             // expires in 7 days
             expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
             // can only be accesed by http server, no one can open it on a browsers console
@@ -123,6 +123,21 @@ router.post("/login", async (req, res) => {
 
         return res.status(500).send(err.message)
     }
+})
+
+
+//Route - GET /api/auth/current
+//Description - Return the currently authorized user
+//Access - Private
+//NOTE -  having requiresAuth verifies user is an authorized user
+router.get("/current", requiresAuth,(req, res) => {
+    //STEP 1 - Just in case double check that there is a user, shouldnt happen but just in case
+    if(!req.user) {
+        return res.status(401).send("Unauthorized!!!");
+    }
+
+    return res.json(req.user);
+
 })
 
 
