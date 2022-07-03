@@ -8,10 +8,15 @@ const app = express();
 // import mongoose
 const mongoose = require("mongoose");
 
-// import auth tst route
-const authRoute = require("./routes/auth")
-
 const cookieParser = require("cookie-parser");
+
+
+
+//IMPORT ROUTES
+const authRoute = require("./routes/auth");
+const toDosRoute = require("./routes/todos");
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,6 +39,7 @@ app.get("/api", (req,res) => {
 
 // app.use tells express server to use
 app.use("/api/auth", authRoute);
+app.use("/api/todos", toDosRoute);
 
 
 
