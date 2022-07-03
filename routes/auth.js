@@ -159,5 +159,21 @@ router.get("/current", requiresAuth,(req, res) => {
 })
 
 
+//Route - POST /api/auth/logout
+//Description - Logout user and clear the cookie
+//Access - Private
+router.put("/logout", requiresAuth, async (req, res) => {
+    try{
+        // STEP 1 - Clear the cookie named "access-token", the only reason why a user is logged in its because he has a cookie/access-token
+        res.clearCookie("access-token")
+        // STEP 2 - Once cookie has been cleared, return a json message of success: true to let user he has been logged out succefully
+        return res.json({success: true})
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send(err.message)
+    }
+})
+
 
 module.exports = router;
