@@ -50,12 +50,11 @@ const globalReducer = (state, action) => {
 // CREATE THE CONTEXT
 export const GlobalContext = createContext(initialState)
 
-// COMPONENT WHICH WILL NEXT ALL COMPONENTS INSIDE -  PROVIDER COMPONENT
+// COMPONENT WHICH WILL NEST ALL COMPONENTS INSIDE -  PROVIDER COMPONENT
 export const GlobalProvider = (props) => {
     const[state, dispatch] = useReducer(globalReducer, initialState)
 
-
-    
+    // Every time the page reloads, do api request to get the current user to check if there is an access token in the cookies
     useEffect( () => {
         getCurrentUser()
     }, [])
