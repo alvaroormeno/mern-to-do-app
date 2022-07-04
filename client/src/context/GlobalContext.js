@@ -59,19 +59,20 @@ export const GlobalProvider = (props) => {
         getCurrentUser()
     }, [])
 
-    // action: get current user - function that will get all the data we need once we think a user is logged in
+    // ACTION 1: GET CURRENT USER
+    // function that will get all the data we need once we think a user is logged in
     const getCurrentUser = async () => {
         try{
 
-        // request to our backend using axios
+        // STEP 1: request to our backend using axios
         const res = await axios.get("/api/auth/current");
-            // if there is a user, we expect data
+            // if there is a user data...
             if(res.data) {
-                // request to grab users current todos
+                // request to grab users current todos and save them on toDosRes const variable
                 const toDosRes = await axios.get("/api/todos/current")
-                // if there is data...
+                // if there is current to dos data...
                 if(toDosRes.data) {
-                    //dispatch 
+                    //we dispatch 
                     dispatch({type: "SET_USER", payload: res.data});
                     dispatch({type: "SET_COMPLETE_TODOS", payload: toDosRes.data.complete});
                     dispatch({type: "SET_INCOMPLETE_TODOS", payload: toDosRes.data.incomplete})
@@ -89,10 +90,26 @@ export const GlobalProvider = (props) => {
         };
     }
 
+    // ACTION 2: LOGOUT
+    const logout = async () => {
+        try {
+            // calls our logout api route
+            await axios.put("/api/auth/logout");
+
+            // if we succesfully logout we dispatch
+            dispatch({type: "RESET_USER"})
+        } catch (err) {
+            console.log(err);
+            // Also if there is any error with "/api/auth/logout") endpoint, reset user
+            dispatch({type: "RESET_USER"})
+        }
+    }
+
     const value = {
         ...state,
         // Exporting this on the value lets us use it in other components to get the current user
         getCurrentUser,
+        logout,
     }
 
     return (
