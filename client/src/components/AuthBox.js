@@ -4,14 +4,43 @@ import {Link} from 'react-router-dom'
 
 const AuthBox = ({register}) => {
 
-    //Create email state to grab value from email input
+    //Creating states for email, password, confirmPassword and name to grab values from their inputs
     const [email, setEmail] = useState("")
-    //Creating states for password, confirmPassword and name to grab values from their inputs
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [name, setName] = useState("");
-       
 
+    // Loading state for when we click Register button    
+    const [loading, setLoading] = useState(false)
+    // Errors state, if there are any errors when we submit our form we can set the errors and display them on the front end.
+    const [errors, setErrors] = useState({})
+       
+    const onSubmit = (e) => {
+        // prevents browser refresh
+        e.preventDefault();
+        setLoading(true);
+
+        //NOTE: Since this component works for both registering or login in, depeding on which we need to grab
+        // specific data from the states above to then send to the API 
+
+        let data = {}
+        // if we are registering we need access to the following data we will then send to our API
+        if(register) {
+            data= {
+                name,
+                email,
+                password,
+                confirmPassword,
+            }
+            
+            // if we are not registering, therefore login in we need the following data to then send to API
+        } else {
+            data = {
+                email,
+                password,
+            }
+        }
+    }
 
   return (
     <div className="auth">
@@ -23,7 +52,7 @@ const AuthBox = ({register}) => {
                 </h1>
             </div>
 
-            <form>
+            <form onSubmit={onSubmit}>
                 {/* Inline If with Logical && Operator */}
                 {register && (
                     <div className="auth__field">
@@ -65,7 +94,8 @@ const AuthBox = ({register}) => {
 
                 <div className="auth__footer">
                     <p className="auth__error">Something Went Wrong</p>
-                    <button className="btn">
+                    {/* disabled={loading} means we want to disable this button if loading is true */}
+                    <button className="btn" type="submit" disabled={loading}>
                         {register ? "Register" : "Login"}
                     </button>
 
