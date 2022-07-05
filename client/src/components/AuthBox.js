@@ -28,8 +28,12 @@ const AuthBox = ({register}) => {
     // useEffect triggers when page reloads or if the second argument array[] has any changes. 
     // - This will trigger when [user] which is a key property imported from useGlobalContext changes. 
     // When it triggers, if user is true then navigate to the dashboard component to show todos. 
+    // We then also added to the conditional if navigate is also true, which it will always be since it is 
+    // function from react-reouter-dom. We do this to add an extra layer of check/security. Also when logged in, 
+    // since the user has a true value, this hook wont let the user change the url and go to the register page 
+    // or login page since its fixed to always navigate to dashboard.
     useEffect(() => {
-        if(user){
+        if(user && navigate){
             navigate("/dashboard");
         }
     }, [user])
