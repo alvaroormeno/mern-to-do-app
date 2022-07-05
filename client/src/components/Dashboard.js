@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useGlobalContext } from '../context/GlobalContext'
 import { useNavigate } from 'react-router-dom'
+import ToDoCard from './ToDoCard'
 
 const Dashboard = () => {
 
@@ -24,9 +25,12 @@ const Dashboard = () => {
 
     <div className="dashboard">
         <div className="todos">
-            {/* Map incompleteToDos Array and display each on front end. Since map needs a key we use the id from the todo */}
+            {/* Map incompleteToDos Array and display each on front end in ToDoCard. Since map needs a key we use the id from the todo */}
             {incompleteToDos.map((incTodoData) => (
-            <h1 key={incTodoData._id}>{incTodoData.content}</h1>
+            <ToDoCard
+                toDo={incTodoData}
+                key={incTodoData._id}
+            /> 
             ))}
         </div>
 
@@ -35,7 +39,10 @@ const Dashboard = () => {
             <div className="todos">
                 <h2 className='todos__title'>Completed ToDo's</h2>
                 {completeToDos.map((comTodoData) => (
-                    <h1 key={comTodoData._id}>{comTodoData.content}</h1>
+                    <ToDoCard
+                        toDo={comTodoData}
+                        key={comTodoData._id}
+                    /> 
                 ))}
             </div>
         )}
