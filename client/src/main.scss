@@ -66,6 +66,12 @@ button, input, textarea {
     border-radius: 5px;
     font-size: 1rem;
     transition: all 0.2s ease;
+    text-decoration: none;
+
+    &:disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
 
     &:hover {
         background-color: $primary-dark;

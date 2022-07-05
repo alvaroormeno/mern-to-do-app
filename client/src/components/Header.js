@@ -1,7 +1,15 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useGlobalContext } from '../context/GlobalContext';
 
 const Header = () => {
+
+    // Destructure useGlobalContext to be able to grab user
+    const {user} = useGlobalContext();
+
+    // Destructure useLocation to be able to use pathname
+    const {pathname} = useLocation();
+
   return (
     <div className="main-header">
         <div className="main-header__inner">
@@ -12,7 +20,23 @@ const Header = () => {
             </div>
 
             <div className="main-header__right">
-                <button className='btn'>Logout</button>
+                {/* If there is a user we want to show logout button, if not, if pathname = "/" which is our login
+                page url path, show the register button, if we are not located on "/" show Login button. 
+                Note: Link to register and login shows as button since its using className='btn' */}
+                {user ? (
+                    <button className='btn'>Logout</button>
+                ) : pathname === "/" ? (
+                    <Link to="/register" className='btn'>
+                        Register
+                    </Link> 
+                ) : (
+                    <Link to="/" className='btn'>
+                        Login
+                    </Link> 
+                )
+                    
+                }
+                
             </div>
         </div>
     </div>

@@ -11,7 +11,7 @@ const Layout = () => {
   const {fetchingUser} = useGlobalContext
 
   // If fetchingUser true, render Loading, if not render normal BrowserRouter. Loading = message while loading login
-  return !fetchingUser ? (
+  return fetchingUser ? (
     <div className="loading">
       <h1>Loading</h1>
     </div>
