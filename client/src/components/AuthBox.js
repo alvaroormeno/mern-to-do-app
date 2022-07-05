@@ -1,8 +1,13 @@
 import React from 'react'
 import {useState} from 'react'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
+import { useGlobalContext } from '../context/GlobalContext'
 
 const AuthBox = ({register}) => {
+
+    //Destructing useGlobalContext to be able to use getCurrentUser function
+    const {getCurrentUser} = useGlobalContext();
 
     //Creating states for email, password, confirmPassword and name to grab values from their inputs
     const [email, setEmail] = useState("")
@@ -39,7 +44,24 @@ const AuthBox = ({register}) => {
                 email,
                 password,
             }
-        }
+        };
+
+        // axios post request depending on register, passing data from authbox input 
+        axios.post(register ? "/api/auth/register" : "/api/auth/login", data)
+        .then(() => {
+            //TODO
+            getCurrentUser();
+
+
+
+        }).catch(err => {
+            setLoading(false);
+            
+            //if error, .? means if there is this property on error, if there is data property on reponse
+            if(err?.response?.data) {
+                setErrors(err.response.data)
+            }
+        })
     }
 
   return (
@@ -60,7 +82,11 @@ const AuthBox = ({register}) => {
                         <input 
                             type="text"
                             value={name}
-                            onChange={(e) => setName(e.target.value)} />
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                        {/* Display error on front end. If error.name is true then show errors inside p element. */}
+                        {errors.name && (<p className='auth__error'>{errors.name}</p>)}
+
                     </div>
                 )}
 
@@ -69,7 +95,9 @@ const AuthBox = ({register}) => {
                     <input 
                         type="text"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)} />
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    {errors.email && (<p className='auth__error'>{errors.email}</p>)}
                 </div>
 
                 <div className="auth__field">
@@ -77,7 +105,9 @@ const AuthBox = ({register}) => {
                     <input 
                         type="Password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)} />
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {errors.password && (<p className='auth__error'>{errors.password}</p>)}
                 </div>
 
                 {register && (
@@ -86,14 +116,20 @@ const AuthBox = ({register}) => {
                         <input 
                             type="Password"
                             value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)} />
-
-                        {/* <p className="auth__error">Something went wrong</p> */}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        {errors.confirmPassword && (<p className='auth__error'>{errors.confirmPassword}</p>)}
                     </div>
                 )}
 
                 <div className="auth__footer">
-                    <p className="auth__error">Something Went Wrong</p>
+                    {/* If the errors object keys length is more the 0 then show error on front end */}
+                    {Object.keys(errors).length > 0 && (
+                        <p className="auth__error">
+                            {register ? 'You have some validation errors!' : errors.error}
+                        </p>
+                    )}
+                    
                     {/* disabled={loading} means we want to disable this button if loading is true */}
                     <button className="btn" type="submit" disabled={loading}>
                         {register ? "Register" : "Login"}
