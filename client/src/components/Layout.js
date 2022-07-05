@@ -2,6 +2,7 @@ import React from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Header from './Header.js'
 import AuthBox from './AuthBox.js'
+import Dashboard from './Dashboard.js'
 
 import { useGlobalContext } from '../context/GlobalContext.js'
 
@@ -20,8 +21,9 @@ const Layout = () => {
         <Header/>
 
         <Routes>
-            <Route exact path='/' element={<AuthBox/>}></Route>
-            <Route path='/register' element={<AuthBox register />}></Route>
+            <Route exact path='/' element={<AuthBox/>}> </Route>
+            <Route path='/register' element={<AuthBox register />}> </Route>
+            <Route path='/dashboard' element={<Dashboard/>}> </Route>
 
         </Routes>
 
