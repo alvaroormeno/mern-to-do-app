@@ -1,7 +1,18 @@
 import React from 'react'
+import {useState} from 'react'
 import {Link} from 'react-router-dom'
 
 const AuthBox = ({register}) => {
+
+    //Create email state to grab value from email input
+    const [email, setEmail] = useState("")
+    //Creating states for password, confirmPassword and name to grab values from their inputs
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [name, setName] = useState("");
+       
+
+
   return (
     <div className="auth">
         <div className="auth__box">
@@ -17,24 +28,36 @@ const AuthBox = ({register}) => {
                 {register && (
                     <div className="auth__field">
                         <label>Name</label>
-                        <input type="text" />
+                        <input 
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)} />
                     </div>
                 )}
 
                 <div className="auth__field">
                     <label>Email</label>
-                    <input type="text" />
+                    <input 
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)} />
                 </div>
 
                 <div className="auth__field">
                     <label>Password</label>
-                    <input type="Password" />
+                    <input 
+                        type="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} />
                 </div>
 
                 {register && (
                     <div className="auth__field">
                         <label> Confirm Password</label>
-                        <input type="Password" />
+                        <input 
+                            type="Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)} />
 
                         {/* <p className="auth__error">Something went wrong</p> */}
                     </div>
