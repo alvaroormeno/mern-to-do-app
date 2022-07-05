@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useState} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import { useGlobalContext } from '../context/GlobalContext'
 
 const AuthBox = ({register}) => {
 
     //Destructing useGlobalContext to be able to use getCurrentUser function
-    const {getCurrentUser} = useGlobalContext();
+    const {getCurrentUser, user} = useGlobalContext();
+
+    //
+    const navigate = useNavigate();
 
     //Creating states for email, password, confirmPassword and name to grab values from their inputs
     const [email, setEmail] = useState("")
@@ -19,7 +22,22 @@ const AuthBox = ({register}) => {
     const [loading, setLoading] = useState(false)
     // Errors state, if there are any errors when we submit our form we can set the errors and display them on the front end.
     const [errors, setErrors] = useState({})
+
+
+
+    // useEffect triggers when page reloads or if the second argument array[] has any changes. 
+    // - This will trigger when [user] which is a key property imported from useGlobalContext changes. 
+    // When it triggers, if user is true then navigate to the dashboard component to show todos. 
+    useEffect(() => {
+        if(user){
+            navigate("/dashboard");
+        }
+    }, [user])
        
+
+
+
+
     const onSubmit = (e) => {
         // prevents browser refresh
         e.preventDefault();
@@ -49,7 +67,10 @@ const AuthBox = ({register}) => {
         // axios post request depending on register, passing data from authbox input 
         axios.post(register ? "/api/auth/register" : "/api/auth/login", data)
         .then(() => {
-            //TODO
+            // If we register, we are sending the data from the inputs to the api which registers the user. Once
+            // registered the getCurrentUser function is called which grabs all the data from the current logged in user
+            // and changed the GlobalContext state. Same if we log in, axios.post sends the input data to login route and
+            // then again call getCurrentUser....
             getCurrentUser();
 
 
