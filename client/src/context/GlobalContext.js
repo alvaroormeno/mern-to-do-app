@@ -10,8 +10,9 @@ const initialState = {
     incompleteToDos: [],
 }
 
-// REDUCER - tells us how to interact with this state, 
+// REDUCER - tells us how to interact with this state, how to set the state object to. 
 const globalReducer = (state, action) => {
+
     switch (action.type) {
 
         case "SET_USER":
@@ -50,8 +51,10 @@ const globalReducer = (state, action) => {
 // CREATE THE CONTEXT
 export const GlobalContext = createContext(initialState)
 
-// COMPONENT WHICH WILL NEST ALL COMPONENTS INSIDE -  PROVIDER COMPONENT
+//GLOBALPROVIDER COMPONENT WHICH WILL NEST ALL COMPONENTS INSIDE -  PROVIDER COMPONENT
 export const GlobalProvider = (props) => {
+
+
     const[state, dispatch] = useReducer(globalReducer, initialState)
 
     // Every time the page reloads, do api request to get the current user to check if there is an access token in the cookies
