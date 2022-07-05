@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 const AuthBox = ({register}) => {
   return (
@@ -32,7 +33,7 @@ const AuthBox = ({register}) => {
 
                 {register && (
                     <div className="auth__field">
-                        <label>Password</label>
+                        <label> Confirm Password</label>
                         <input type="Password" />
 
                         {/* <p className="auth__error">Something went wrong</p> */}
@@ -44,6 +45,20 @@ const AuthBox = ({register}) => {
                     <button className="btn">
                         {register ? "Register" : "Login"}
                     </button>
+
+                    {!register ? (
+                        <div className="auth__register">
+                            <p>
+                                Not a member? <Link to="/register">Register Now</Link>
+                            </p>
+                        </div>
+                    ) : ( 
+                        <div className="auth__register">
+                            <p>
+                                Already a member? <Link to="/">Login Now</Link>
+                            </p>
+                        </div>
+                    )}
                 </div> 
             </form>
         </div>
