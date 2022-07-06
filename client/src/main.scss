@@ -263,6 +263,10 @@ button, input, textarea {
         border-radius: 0.15em;
         display: grid;
         place-content: center;
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     input[type="checkbox"]::before {

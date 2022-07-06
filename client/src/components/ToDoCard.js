@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react'
 import axios from 'axios'
+import { useGlobalContext } from '../context/GlobalContext'
 
 // {toDo} means we are destrucurting the prop received to grab the toDo value of that prop.
 const ToDoCard = ({toDo}) => {
@@ -7,6 +8,8 @@ const ToDoCard = ({toDo}) => {
     const [content, setContent] = useState(toDo.content)
     const [editing, setEditing] = useState(false)
     const input = useRef(null);
+
+    const {toDoComplete } = useGlobalContext();
 
     const onEdit = (e) => {
         e.preventDefault();
@@ -33,7 +36,7 @@ const ToDoCard = ({toDo}) => {
         e.preventDefault();
         // axios call to update todo based on id to complete
         axios.put(`/api/todos/${toDo._id}/complete`).then(res => {
-            //toDoComplete(res.data)
+            toDoComplete(res.data)
         })
     }
 

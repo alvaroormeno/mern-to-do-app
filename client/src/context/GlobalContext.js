@@ -119,12 +119,38 @@ export const GlobalProvider = (props) => {
         })
     }
 
+    // ACTION 4: MARK TO DO AS COMPLETE
+    // the todo will be passed to this function as a prop
+    const toDoComplete = (toDo) => {
+        // remove to do from incomplete list
+        dispatch( {
+            type: "SET_INCOMPLETE_TODOS",
+            // Filter through existing todo based on id and remove it
+            // Payload equals to the existing todos, they are filtered, each todo are passed as a param (incompleteToDo)
+            // to the filter function which returns every todo that does not equal (!==) to the toDo id received in the
+            // toDoComplete function parameter. 
+            payload: state.incompleteToDos.filter((incompleteToDo) => 
+                incompleteToDo._id !== toDo._id
+            )
+        })
+
+        // move todo to complete list
+        dispatch({
+            type: "SET_COMPLETE_TODOS",
+            // to add the todo recieved as a paramter to the top of array, we add it first and then after 
+            // we spread the incompletetodos array.
+            payload: [toDo, ...state.completeToDos]
+        })
+    }
+
+
     const value = {
         ...state,
         // Exporting this on the value lets us use it in other components to get the current user
         getCurrentUser,
         logout,
-        addToDo
+        addToDo,
+        toDoComplete
     }
 
     return (
