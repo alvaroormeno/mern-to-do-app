@@ -1,4 +1,5 @@
 import React, {useRef, useState} from 'react'
+import axios from 'axios'
 
 // {toDo} means we are destrucurting the prop received to grab the toDo value of that prop.
 const ToDoCard = ({toDo}) => {
@@ -28,11 +29,30 @@ const ToDoCard = ({toDo}) => {
 
     }
 
+    const markAsComplete = (e) => {
+        e.preventDefault();
+        // axios call to update todo based on id to complete
+        axios.put(`/api/todos/${toDo._id}/complete`).then(res => {
+            //toDoComplete(res.data)
+        })
+    }
+
+    const markAsIncomplete = (e) => {
+        e.preventDefault();
+        // axios call to update todo based on id to incomplete
+        axios.put(`/api/todos/${toDo._id}/complete`).then(res => {
+            //toDoIncomplete(res.data)
+        })
+    }
+
   return (
     <div className={`todo ${toDo.complete ? "todo--complete" : ""}`}>
 
 
-        <input type="checkbox" checked={toDo.complete}/>
+        <input 
+            type="checkbox" 
+            checked={toDo.complete} 
+            onChange={!toDo.complete ? markAsComplete : markAsIncomplete}/>
         {/* The content of the todo will be inside of a text input. This will let us edit it later on. */}
         <input 
             type="text"
