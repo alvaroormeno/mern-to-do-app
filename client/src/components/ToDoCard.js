@@ -8,10 +8,10 @@ const ToDoCard = ({toDo}) => {
     const input = useRef(null);
 
   return (
-    <div className="todo">
+    <div className={`todo ${toDo.complete ? "todo--complete" : ""}`}>
 
 
-        <input type="checkbox"/>
+        <input type="checkbox" checked={toDo.complete}/>
         {/* The content of the todo will be inside of a text input. This will let us edit it later on. */}
         <input 
             type="text"

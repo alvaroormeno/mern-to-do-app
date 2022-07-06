@@ -204,6 +204,12 @@ button, input, textarea {
     padding: 10px;
     border-radius: 5px;
 
+    &--complete {
+        input[type="text"] {
+            text-decoration: line-through;
+        }
+    }
+
     &:not(:last-child) {
         margin-bottom: 15px;
     }
