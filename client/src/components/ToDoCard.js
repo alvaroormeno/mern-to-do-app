@@ -7,6 +7,27 @@ const ToDoCard = ({toDo}) => {
     const [editing, setEditing] = useState(false)
     const input = useRef(null);
 
+    const onEdit = (e) => {
+        e.preventDefault();
+        // sets setEditing state to true
+        setEditing(true);
+        // makaes the current input focus
+        input.current.focus();
+
+    }
+
+    const stopEditing = (e) => {
+        if(e) {
+            e.preventDefault()
+        }
+
+        // change editing state back to false/not editing
+        setEditing(false);
+        // since we click cancel on a half edited todo, we want to change back the content to the original content
+        setContent(toDo.content)
+
+    }
+
   return (
     <div className={`todo ${toDo.complete ? "todo--complete" : ""}`}>
 
@@ -21,10 +42,27 @@ const ToDoCard = ({toDo}) => {
             value={content} 
             // readOnly lets us edit the input based on true or false. Its set to the editing state
             readOnly={!editing}
+            // onChange calls function that sets the setContent to the value of the input, therefore we can start typing/editing
+            onChange={(e) => setContent(e.target.value)}
         />
         <div className="todo__controls">
-            <button>Edit</button>
-            <button>Delete</button>
+            {/* If its not editing, show edit and delete button, if it is show cancel and save */}
+            {!editing ? (
+                <>
+                {/* If it is not complete show the edit button */}
+                {!toDo.complete && (<button onClick={onEdit}>Edit</button>)}
+                <button>Delete</button>
+                </>
+            ) : (
+                <>
+                <button onClick={stopEditing}>Cancel</button>
+                <button>Save</button>
+                </>
+
+            )}
+
+            
+            
         </div>
         
     </div>
