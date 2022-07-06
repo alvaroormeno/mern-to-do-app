@@ -9,7 +9,7 @@ const ToDoCard = ({toDo}) => {
     const [editing, setEditing] = useState(false)
     const input = useRef(null);
 
-    const {toDoComplete } = useGlobalContext();
+    const {toDoComplete, toDoIncomplete } = useGlobalContext();
 
     const onEdit = (e) => {
         e.preventDefault();
@@ -43,8 +43,8 @@ const ToDoCard = ({toDo}) => {
     const markAsIncomplete = (e) => {
         e.preventDefault();
         // axios call to update todo based on id to incomplete
-        axios.put(`/api/todos/${toDo._id}/complete`).then(res => {
-            //toDoIncomplete(res.data)
+        axios.put(`/api/todos/${toDo._id}/incomplete`).then(res => {
+            toDoIncomplete(res.data)
         })
     }
 

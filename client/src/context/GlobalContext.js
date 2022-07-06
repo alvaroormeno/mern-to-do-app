@@ -143,6 +143,34 @@ export const GlobalProvider = (props) => {
         })
     }
 
+    // ACTION 5: MARK TO DO AS INCOMPLETE
+    // the todo will be passed to this function as a prop
+    const toDoIncomplete = (toDo) => {
+
+        dispatch({
+            type: "SET_COMPLETE_TODOS",
+            payload: state.completeToDos.filter(
+                (completetoDo) => completetoDo._id !== toDo._id
+            ),
+        })
+
+        // Moving back the complete to do to the incomplete todo section cant be done like ACTION4 because complete
+        // todos are sorted out by most recent completed. The incomplete todos are sorted by the date created so if
+        // we just move the complete to incomplete it could return to the middle of the incomplete list and we want
+        // it at the top. So we need to sort through array and make sure it goes b
+
+        // copy of the Incompletetodos array and we will add our todo passed
+        const newIncompleteToDos = [toDo, ...state.incompleteToDos]
+
+        dispatch({
+            type: "SET_INCOMPLETE_TODOS",
+            payload: newIncompleteToDos.sort(
+                //we are comparing a and b
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            )
+        })
+    }
+
 
     const value = {
         ...state,
@@ -150,7 +178,8 @@ export const GlobalProvider = (props) => {
         getCurrentUser,
         logout,
         addToDo,
-        toDoComplete
+        toDoComplete,
+        toDoIncomplete
     }
 
     return (
