@@ -1,7 +1,10 @@
 import axios from 'axios'
 import React, {useState} from 'react'
+import { useGlobalContext } from '../context/GlobalContext'
 
 const NewToDo = () => {
+    // Destructuring useGlobalContext to extract addToDo action
+    const {addToDo} = useGlobalContext();
 
     const [content, setContent] = useState("")
 
@@ -17,7 +20,7 @@ const NewToDo = () => {
             // then sets back the content state of the input to empty("")
             setContent("")
             // action of add to do to add it to our globalcontext
-            //addToDo(res.data)
+            addToDo(res.data)
         })
     }
 
@@ -28,7 +31,7 @@ const NewToDo = () => {
             value={content}
             onChange={changeContent}  />
 
-        <button className='btn'>Add</button>
+        <button className='btn' disabled={content.length == 0}>Add</button>
     </form>
   )
 }
