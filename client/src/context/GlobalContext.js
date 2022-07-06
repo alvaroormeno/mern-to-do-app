@@ -108,11 +108,23 @@ export const GlobalProvider = (props) => {
         }
     }
 
+
+    // ACTION 3: ADD NEW TODO
+    const addToDo = (toDo) => {
+        // any new todo is an incomplete todo
+        dispatch({
+            type: "SET_INCOMPLETE_TODOS",
+            // to add the new to do to the top of array, we add it first and then after we spread the incompletetodos array
+            payload: [toDo, ...state.incompleteToDos]
+        })
+    }
+
     const value = {
         ...state,
         // Exporting this on the value lets us use it in other components to get the current user
         getCurrentUser,
         logout,
+        addToDo
     }
 
     return (
