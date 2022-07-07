@@ -9,7 +9,7 @@ const ToDoCard = ({toDo}) => {
     const [editing, setEditing] = useState(false)
     const input = useRef(null);
 
-    const {toDoComplete, toDoIncomplete, removeToDo } = useGlobalContext();
+    const {toDoComplete, toDoIncomplete, removeToDo, updateToDo } = useGlobalContext();
 
     const onEdit = (e) => {
         e.preventDefault();
@@ -59,6 +59,22 @@ const ToDoCard = ({toDo}) => {
         }
     }
 
+    const editToDo = (e) => {
+        e.preventDefault() 
+        // call api to update todo based on id with the content passed
+        axios.put(`/api/todos/${toDo._id}`, {content}).then((res) => {
+            // call edit action on GlobalContext.js
+            updateToDo(res.data)
+            // change editing state to false so front end stops editing
+            setEditing(false)
+
+            // dont care much about erros, but just in case call stopEditing function
+        }).catch(() => {
+            stopEditing();
+        })
+        
+    }
+
   return (
     <div className={`todo ${toDo.complete ? "todo--complete" : ""}`}>
 
@@ -90,7 +106,7 @@ const ToDoCard = ({toDo}) => {
             ) : (
                 <>
                 <button onClick={stopEditing}>Cancel</button>
-                <button>Save</button>
+                <button onClick={editToDo}>Save</button>
                 </>
 
             )}

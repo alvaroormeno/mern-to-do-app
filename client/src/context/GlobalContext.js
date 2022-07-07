@@ -198,6 +198,33 @@ export const GlobalProvider = (props) => {
 
     }
 
+    // ACTION 6: UPDATE TODO
+    // Map through current to dos, remove old version we have on the state nad replace it with neew version returned from api
+    const updateToDo = (toDo) => {
+        if(toDo.complete) {
+            // new complete todo array which we map
+            const newCompleteToDos = state.completeToDos.map(
+                // for each completed todo, if the completed todo does not match the new updated (passed) todo id,
+                // just return the complete to do to the array if not return the new updates toDo.
+                ((completeToDo) => completeToDo._id !== toDo._id ? completeToDo : toDo)
+            );
+
+            dispatch({
+                type: "SET_COMPLETE_TODOS",
+                payload: newCompleteToDos,
+            })
+        }else {
+            const newIncompleteToDos = state.incompleteToDos.map(
+                ((incompleteToDo) => incompleteToDo !== toDo.id ? incompleteToDo : toDo)
+            );
+
+            dispatch({
+                type: "SET_INCOMPLETE_TODOS",
+                payload: newIncompleteToDos,
+            })
+        }
+    }
+
 
 
     const value = {
@@ -208,7 +235,8 @@ export const GlobalProvider = (props) => {
         addToDo,
         toDoComplete,
         toDoIncomplete,
-        removeToDo
+        removeToDo,
+        updateToDo
     }
 
     return (
