@@ -154,6 +154,10 @@ export const GlobalProvider = (props) => {
             ),
         })
 
+        // We want to move back the completed todo back to the incomplete list in the same space it was, not on top
+        // as a new incomplete. The incomplete todos are sorted by the date created. We need to do a comparison, 
+        // sort through array and make sure it goes in correct place.
+
         // Moving back the complete to do to the incomplete todo section cant be done like ACTION4 because complete
         // todos are sorted out by most recent completed. The incomplete todos are sorted by the date created so if
         // we just move the complete to incomplete it could return to the middle of the incomplete list and we want
@@ -171,6 +175,30 @@ export const GlobalProvider = (props) => {
         })
     }
 
+    // ACTION 6: DELETE TO DO
+    // A todo will be passed to this function as a prop. To remove that toDo, we have to update the state by dispatching
+    // all the todos except we passed to this function for both complete and incomplete todos.
+    const removeToDo = (toDo) => {
+        if(toDo.complete) {
+            dispatch({
+                type: "SET_COMPLETE_TODOS",
+                // filter the state completetodos array and return all todos that not equal the todo we passed in
+                payload: state.completeToDos.filter(
+                    (completeToDo) => completeToDo._id !== toDo._id
+                )
+            })
+        }else {
+            dispatch({
+                type: "SET_INCOMPLETE_TODOS",
+                payload: state.incompleteToDos.filter(
+                    (incompleteToDo) => incompleteToDo._id !== toDo._id
+                )
+            })
+        }
+
+    }
+
+
 
     const value = {
         ...state,
@@ -179,7 +207,8 @@ export const GlobalProvider = (props) => {
         logout,
         addToDo,
         toDoComplete,
-        toDoIncomplete
+        toDoIncomplete,
+        removeToDo
     }
 
     return (

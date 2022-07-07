@@ -9,7 +9,7 @@ const ToDoCard = ({toDo}) => {
     const [editing, setEditing] = useState(false)
     const input = useRef(null);
 
-    const {toDoComplete, toDoIncomplete } = useGlobalContext();
+    const {toDoComplete, toDoIncomplete, removeToDo } = useGlobalContext();
 
     const onEdit = (e) => {
         e.preventDefault();
@@ -48,6 +48,17 @@ const ToDoCard = ({toDo}) => {
         })
     }
 
+    const deleteToDo = (e) => {
+        e.preventDefault();
+
+        if(window.confirm("Are you sure you want to delete this ToDo? ")) {
+            axios.delete(`/api/todos/${toDo._id}`).then(() => {
+                // call action in GlobalContext.js
+                removeToDo(toDo);
+            })
+        }
+    }
+
   return (
     <div className={`todo ${toDo.complete ? "todo--complete" : ""}`}>
 
@@ -74,7 +85,7 @@ const ToDoCard = ({toDo}) => {
                 <>
                 {/* If it is not complete show the edit button */}
                 {!toDo.complete && (<button onClick={onEdit}>Edit</button>)}
-                <button>Delete</button>
+                <button onClick={deleteToDo}>Delete</button>
                 </>
             ) : (
                 <>
