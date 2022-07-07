@@ -10,11 +10,20 @@ const mongoose = require("mongoose");
 
 const cookieParser = require("cookie-parser");
 
+const path = require('path')
+
 
 
 //IMPORT ROUTES
 const authRoute = require("./routes/auth");
 const toDosRoute = require("./routes/todos");
+
+// Pointing express to the static build files when we build our app for deployment
+app.use(express.static(path.resolve(__dirname, "./client/build")))
+
+app.get("*"), (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./client/build", "index.html"))
+}
 
 
 
